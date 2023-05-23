@@ -1,15 +1,17 @@
-import java.lang.Thread;
 
-public class MainTP{
+//import java.lang.Thread;
+
+public class Main{
     
     public static void main(String[] args){
-        FineGrainList list = new FineGrainList();
-        ThreadAdd add = new ThreadAdd(list);
-        ThreadRemove remove = new ThreadRemove(list);
+        LockFreeList list = new LockFreeList();
+        
+        /* ThreadAdd add = new ThreadAdd(list);
+        ThreadRemove remove = new ThreadRemove(list); */
         list.add(0);
         list.add(15);
 
-        add.start();
+        /* add.start();
         remove.start();
         
         try {
@@ -21,6 +23,6 @@ public class MainTP{
         }
 
         list.printList();
-    }
-
+    } */
+}
 }

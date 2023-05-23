@@ -87,6 +87,7 @@ public class FineGrainList {
         Node current = this.head.next();
         for(int i = 0; i< this.size.get(); i++){
             System.out.println(current.element);
+            current = current.next;
         }
     }
 }

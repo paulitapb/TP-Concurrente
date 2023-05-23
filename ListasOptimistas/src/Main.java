@@ -1,9 +1,11 @@
-import java.lang.Thread;
 
-public class MainTP{
+//import java.lang.Thread;
+
+public class Main{
     
     public static void main(String[] args){
-        FineGrainList list = new FineGrainList();
+        OptimisticList list = new OptimisticList();
+        
         ThreadAdd add = new ThreadAdd(list);
         ThreadRemove remove = new ThreadRemove(list);
         list.add(0);
@@ -22,5 +24,4 @@ public class MainTP{
 
         list.printList();
     }
-
 }

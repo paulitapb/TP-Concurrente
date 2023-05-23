@@ -1,4 +1,5 @@
 import java.lang.Thread;
+/* import ListasOptimistas; 
 
 public class MainTP{
     
@@ -23,4 +24,4 @@ public class MainTP{
         list.printList();
     }
 
-}
+} */
