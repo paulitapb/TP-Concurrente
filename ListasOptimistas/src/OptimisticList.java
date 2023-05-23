@@ -33,7 +33,7 @@ public class OptimisticList {
         while (true) { //volver a empezar
             Node predecesor = head;
             Node current = head.next;
-            while (current.hashKey < key) {
+            while (current.hashKey() < key) {
                 predecesor = current;
                 current = current.next;
             }
@@ -42,7 +42,7 @@ public class OptimisticList {
 
             try {
                 if (validate(predecesor,current)) {
-                    if (current.hashKey == key) {
+                    if (current.hashKey() == key) {
                         predecesor.next = current.next;
                         size.getAndDecrement();
                         return true;
@@ -63,7 +63,7 @@ public class OptimisticList {
         while (true) { //volver a empezar
             Node predecesor = head;
             Node current = head.next;
-            while (current.hashKey < key) {
+            while (current.hashKey() < key) {
                 predecesor = current;
                 current = current.next;
             }
@@ -73,7 +73,7 @@ public class OptimisticList {
             
             try {
                 if (validate(predecesor,current)) {
-                    if (current.hashKey == key){
+                    if (current.hashKey() == key){
                         return false;
                     }
                     else {
