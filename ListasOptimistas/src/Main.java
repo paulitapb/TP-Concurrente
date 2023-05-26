@@ -6,8 +6,8 @@ public class Main{
     public static void main(String[] args){
         OptimisticList list = new OptimisticList();
         
-        ThreadAdd add = new ThreadAdd(list);
-        ThreadRemove remove = new ThreadRemove(list);
+        ThreadAddOL add = new ThreadAddOL(list);
+        ThreadRemoveOL remove = new ThreadRemoveOL(list);
         list.add(0);
         list.add(15);
 

@@ -4,8 +4,8 @@ public class MainTP{
     
     public static void main(String[] args){
         FineGrainList list = new FineGrainList();
-        ThreadAdd add = new ThreadAdd(list);
-        ThreadRemove remove = new ThreadRemove(list);
+        ThreadAddFGL add = new ThreadAddFGL(list);
+        ThreadRemoveFGL remove = new ThreadRemoveFGL(list);
         list.add(0);
         list.add(15);
 

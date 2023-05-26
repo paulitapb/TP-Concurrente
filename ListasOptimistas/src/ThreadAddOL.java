@@ -1,7 +1,7 @@
-public class ThreadAdd extends Thread {
+public class ThreadAddOL extends Thread {
 
     public OptimisticList list;
-    public ThreadAdd(OptimisticList list) {
+    public ThreadAddOL(OptimisticList list) {
         this.list = list;
     }
     

@@ -6,23 +6,18 @@ public class LockFreeList {
     
     private class Node {
         private Object element;
-        private int hashKey;
-        private Node next;
-        private AtomicMarkableReference<Node> mark;
-        public ReentrantLock lock = new ReentrantLock();
-        
+        private int hashKey; 
+        private AtomicMarkableReference<Node> next_mark;
         
         public Node (Object element){
             this.element = element;
             this.hashKey = element.hashCode();
-            this.mark = new AtomicMarkableReference<Node>(this, false);
+            this.next_mark = new AtomicMarkableReference<LockFreeList.Node>(this, false);
         }
         public int hashKey(){
             return this.hashKey; 
         }
-        public Node next(){
-            return this.next;
-        }
+ 
     }
 
     private class NodeTuple{
@@ -38,9 +33,11 @@ public class LockFreeList {
 
     private Node head;
     public AtomicInteger size = new AtomicInteger(0);
+    
     public LockFreeList(){
         head = new Node (Integer.MIN_VALUE);
-        head.next = new Node (Integer.MAX_VALUE);
+        head.next_mark = new AtomicMarkableReference<LockFreeList.Node>(
+                                                new Node (Integer.MAX_VALUE), false);
     }
 
     public boolean remove(Object o) {
@@ -50,18 +47,16 @@ public class LockFreeList {
             NodeTuple predAndSucc = find(o);
             Node predecesor = predAndSucc.first; 
             Node succesor = predAndSucc.second; 
-            Node current = predecesor.next; 
+            Node current = predecesor.next_mark.getReference(); 
             if (current.hashKey() != key)
                 return false;
             else {
-                // Este get reference es en realidad 
-                // una ref no el nodo por eso esto no 
-                //tipa bien 
-                succesor = current.next.mark.getReference();
-                snip = current.next.mark.attemptMark(succesor, true);
+                succesor = current.next_mark.getReference();
+                snip = current.next_mark.attemptMark(succesor, true);
                 if (!snip)
                     continue;
-                predecesor.next.mark.compareAndSet(current, succesor, false, false);
+                predecesor.next_mark.compareAndSet(current, succesor, false, false);
+                size.getAndDecrement();
                 return true;
             }
         }
@@ -72,14 +67,15 @@ public class LockFreeList {
         while (true){
             NodeTuple predAndSucc = find(o);
             Node predecesor = predAndSucc.first;
-            //Node succesor = predAndSucc.second;
-            Node current = predecesor.next; 
+            
+            Node current = predecesor.next_mark.getReference(); 
             if (current.hashKey() == key)
                 return false;
             else{
                 Node node = new Node(o);
-                node.next.mark = new AtomicMarkableReference<Node>(current,false);
-                if (predecesor.next.mark.compareAndSet(current, node, false, false))
+                node.next_mark = new AtomicMarkableReference<Node>(current,false);
+                if (predecesor.next_mark.compareAndSet(current, node, false, false))
+                    size.getAndIncrement();
                     return true;
             }
         }
@@ -91,15 +87,15 @@ public class LockFreeList {
         boolean snip;
         int key = o.hashCode();
         tryAgain: while (true) {
-            predecesor = head.mark.getReference();
-            current = predecesor.next.mark.getReference();
+            predecesor = head;
+            current = predecesor.next_mark.getReference();
             while (true) {
-                succesor = current.next.mark.get(marked);
+                succesor = current.next_mark.get(marked);
                 while (marked[0]){
-                    snip = predecesor.next.mark.compareAndSet(current, succesor, false, false);
+                    snip = predecesor.next_mark.compareAndSet(current, succesor, false, false);
                     if (!snip) continue tryAgain;
                     current = succesor;
-                    succesor = current.next.mark.get(marked);
+                    succesor = current.next_mark.get(marked);
                 }
                 if (current.hashKey() >= key){
                     NodeTuple predecesorAndSucc = new NodeTuple(predecesor, current);  
@@ -116,17 +112,17 @@ public class LockFreeList {
         int key = o.hashCode();
         Node current = head;
         while (current.hashKey() < key) {
-            current = current.next;
-            Node succesor = current.next.mark.get(marked);
+            current = current.next_mark.getReference();
+            current.next_mark.get(marked);
         }
         return (current.hashKey() == key && !marked[0]);
     }
 
     public void printList(){
-        Node current = this.head.next();
+        Node current = this.head.next_mark.getReference();
         for(int i = 0; i< this.size.get(); i++){
             System.out.println(current.element);
-            current = current.next;
+            current = current.next_mark.getReference();
         }
     }
 }

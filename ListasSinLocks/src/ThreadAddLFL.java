@@ -1,18 +1,19 @@
-public class ThreadAdd extends Thread {
+public class ThreadAddLFL extends Thread {
 
-    public FineGrainList list;
-    public ThreadAdd(FineGrainList list) {
+    public LockFreeList list;
+    public ThreadAddLFL(LockFreeList list) {
         this.list = list;
     }
     
     public void run(){
         list.add(1);
         list.add(2);
-        try {
-            ThreadAddOL.sleep(4000);
+        
+        /* try {
+            ThreadAddLFL.sleep(4000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        } */
         list.add(3);
         list.add(4);
         list.add(5);

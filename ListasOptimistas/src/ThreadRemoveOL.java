@@ -1,9 +1,10 @@
-public class ThreadRemove extends Thread{
+public class ThreadRemoveOL extends Thread {
 
-    public FineGrainList list;
-    public ThreadRemove(FineGrainList list) {
+    public OptimisticList list;
+    public ThreadRemoveOL(OptimisticList list) {
         this.list = list;
     }
+    
     public void run(){
         list.remove(1);
         list.remove(3);

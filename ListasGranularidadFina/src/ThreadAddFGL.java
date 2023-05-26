@@ -1,7 +1,7 @@
-public class ThreadAdd extends Thread {
+public class ThreadAddFGL extends Thread {
 
     public FineGrainList list;
-    public ThreadAdd(FineGrainList list) {
+    public ThreadAddFGL(FineGrainList list) {
         this.list = list;
     }
     
@@ -9,7 +9,7 @@ public class ThreadAdd extends Thread {
         list.add(1);
         list.add(2);
         try {
-            ThreadAddOL.sleep(4000);
+            ThreadAddFGL.sleep(4000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
