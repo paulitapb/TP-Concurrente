@@ -2,7 +2,7 @@ package concurrentlist;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicMarkableReference;
 
-public class LockFreeList extends ConcurrentList {
+final public class LockFreeList extends ConcurrentList {
     
     private class Node {
         private Object element;
@@ -40,7 +40,7 @@ public class LockFreeList extends ConcurrentList {
                                                 new Node (Integer.MAX_VALUE), false);
     }
 
-    public boolean remove(Object o) {
+    @Override public boolean remove(Object o) {
         int key = o.hashCode();
         boolean snip;
         while (true) {
@@ -62,7 +62,7 @@ public class LockFreeList extends ConcurrentList {
         }
     }
 
-    public boolean add(Object o) {
+    @Override public boolean add(Object o) {
         int key = o.hashCode();
         while (true){
             NodeTuple predAndSucc = find(o);
@@ -117,8 +117,8 @@ public class LockFreeList extends ConcurrentList {
         }
         return (current.hashKey() == key && !marked[0]);
     }
-
-    public void printList(){
+    //TO DO :aca hay q chequear la marca 
+    @Override public void printList(){
         Node current = this.head.next_mark.getReference();
         for(int i = 0; i< this.size.get(); i++){
             System.out.println(current.element);

@@ -2,7 +2,7 @@ package concurrentlist;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class OptimisticList extends ConcurrentList{
+final public class OptimisticList extends ConcurrentList{
     
     private class Node {
         private Object element;
@@ -29,7 +29,7 @@ public class OptimisticList extends ConcurrentList{
         head.next = new Node (Integer.MAX_VALUE);
     }
 
-    public boolean remove(Object o) {
+    @Override public boolean remove(Object o) {
         int key = o.hashCode();
         while (true) { //volver a empezar
             Node predecesor = head;
@@ -59,7 +59,7 @@ public class OptimisticList extends ConcurrentList{
         }
     }
 
-    public boolean add(Object o) {
+    @Override public boolean add(Object o) {
         int key = o.hashCode();
         while (true) { //volver a empezar
             Node predecesor = head;
@@ -104,7 +104,7 @@ public class OptimisticList extends ConcurrentList{
         return false;
     }
 
-    public void printList(){
+    @Override public void printList(){
         Node current = this.head.next();
         for(int i = 0; i< this.size.get(); i++){
             System.out.println(current.element);
