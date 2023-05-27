@@ -92,9 +92,28 @@ final public class FineGrainList extends ConcurrentList{
 
     @Override public void printList(){
         Node current = this.head.next();
-        for(int i = 0; i< this.size.get(); i++){
+        for(int i = 0; i< this.size(); i++){
             System.out.println(current.element);
             current = current.next;
         }
+    }
+
+    @Override public boolean checkListInvariant(){
+        int actual_size = 0; 
+        Node current = this.head.next();
+        int last_hash = current.hashKey(); 
+        
+        for(int i = 0; i< this.size(); i++){
+            current = current.next;
+            int curr_hash = current.hashKey();
+
+            if(last_hash > curr_hash){
+                return false; 
+            }
+            last_hash = curr_hash;
+            actual_size++; 
+        }
+        return (actual_size == this.size()) && ((Integer)current.element == Integer.MAX_VALUE)
+                && ((Integer)head.element == Integer.MIN_VALUE);  
     }
 }

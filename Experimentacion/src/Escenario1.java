@@ -30,9 +30,17 @@ public class Escenario1 {
             
             //Lista sin locks
             LockFreeList    listLFL     = new LockFreeList();
-            Thread[] threadsLFL = ThreadsUtils.createThreadsAdd(listLFL, 4, 1000);
+            Thread[] threadsLFL = ThreadsUtils.createThreadsAdd(listLFL, 4, 10);
             long executionTimeLFL = ThreadsUtils.measureThreadExcecutionTime(threadsLFL, listLFL, "Lista sin locks");
+
+            Thread.sleep(100);
+            listLFL.printList();
+            if(!listFGL.checkListInvariant() || !listOP.checkListInvariant() || !listLFL.checkListInvariant()){
             
+                System.out.println("Se rompio alguna lista");
+                break;
+            }
+
             fileTime.write(Long.toString(executionTimeFGL) + " " + 
                             Long.toString(executionTimeOP) + " "  + 
                             Long.toString(executionTimeLFL) + "\n"  );

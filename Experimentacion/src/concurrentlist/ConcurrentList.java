@@ -9,4 +9,5 @@ abstract public class ConcurrentList {
     public abstract boolean remove(Object o);
     public abstract int size();
     public abstract void printList(); 
+    public abstract boolean checkListInvariant(); 
 }
