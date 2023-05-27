@@ -17,10 +17,10 @@ public class ThreadRemove extends Thread {
     }
 
     public void run(){
-        int valor = from;
-        while(valor < to){
-            list.remove(valor);
-            valor+=step;
+        int value = from;
+        while(value < to){
+            list.remove(value);
+            value+=step;
         }
     }
 
