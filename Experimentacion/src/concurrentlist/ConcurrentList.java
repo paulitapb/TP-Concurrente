@@ -7,5 +7,6 @@ abstract public class ConcurrentList {
     
     public abstract boolean add(Object o);
     public abstract boolean remove(Object o);
+    public abstract int size();
     public abstract void printList(); 
 }

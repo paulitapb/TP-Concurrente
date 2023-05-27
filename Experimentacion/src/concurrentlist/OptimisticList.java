@@ -29,6 +29,10 @@ final public class OptimisticList extends ConcurrentList{
         head.next = new Node (Integer.MAX_VALUE);
     }
 
+    @Override public int size(){
+        return this.size.get();
+    };
+
     @Override public boolean remove(Object o) {
         int key = o.hashCode();
         while (true) { //volver a empezar

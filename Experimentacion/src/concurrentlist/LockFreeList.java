@@ -40,6 +40,10 @@ final public class LockFreeList extends ConcurrentList {
                                                 new Node (Integer.MAX_VALUE), false);
     }
 
+    @Override public int size(){
+        return this.size.get();
+    };
+
     @Override public boolean remove(Object o) {
         int key = o.hashCode();
         boolean snip;
@@ -117,12 +121,14 @@ final public class LockFreeList extends ConcurrentList {
         }
         return (current.hashKey() == key && !marked[0]);
     }
-    //TO DO :aca hay q chequear la marca 
+    
     @Override public void printList(){
         Node current = this.head.next_mark.getReference();
         for(int i = 0; i< this.size.get(); i++){
-            System.out.println(current.element);
-            current = current.next_mark.getReference();
+            if(this.contains(current.element)){
+                System.out.println(current.element);
+                current = current.next_mark.getReference();
+            }    
         }
     }
 }

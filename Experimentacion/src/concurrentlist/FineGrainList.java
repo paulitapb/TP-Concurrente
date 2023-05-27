@@ -31,6 +31,10 @@ final public class FineGrainList extends ConcurrentList{
         head.next = new Node (Integer.MAX_VALUE);
     }
 
+    @Override public int size(){
+        return this.size.get();
+    };
+
     @Override public boolean remove(Object o) {
         Node predecesor, current;
         int key = o.hashCode();
