@@ -123,27 +123,23 @@ final public class LockFreeList extends ConcurrentList {
     }
     
     @Override public void printList(){
-        boolean[] marked = {false};
         Node current = this.head.next_mark.getReference();
-        while((Integer)current.element != Integer.MAX_VALUE){
-            current.next_mark.get(marked); 
-            if(!marked[0]){
-                System.out.println(current.element);
+        while((Integer)current.element != Integer.MAX_VALUE){  
+            if(!current.next_mark.isMarked()){
+                System.out.print(current.element + " ");
             }else{
                 System.out.println("marcado"+ current.element);
             }
             current = current.next_mark.getReference();
         }
+        System.out.println(); 
     }
 
-    
     @Override public boolean checkListInvariant(){
         int actual_size = 0; 
         Node current = head.next_mark.getReference();
-        boolean[] marked = {false};
         while((Integer)current.element != Integer.MAX_VALUE){
-            current.next_mark.get(marked); 
-            if(!marked[0]){
+            if(!current.next_mark.isMarked()){
                 actual_size++;
             }
             current = current.next_mark.getReference();

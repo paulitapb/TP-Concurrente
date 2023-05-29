@@ -13,9 +13,9 @@ public class Escenario1 {
         File file = new File("src/logs/timeEscenario1.txt");
         file.createNewFile();
           
-        int reps = 10;
+        int reps = 1000;
         int numberOfThreads     = 4;     // (Cambiar a 2 o 8)
-        int numberOfElements    = 1000;  // (Cambiar a 500 o 2000 respectivo a la linea anterior)
+        int numberOfElements    = 10;  // (Cambiar a 500 o 2000 respectivo a la linea anterior)
         
         FileWriter fileTime = new FileWriter("src/logs/timeEscenario1.txt");
 
@@ -46,6 +46,10 @@ public class Escenario1 {
             fileTime.write(Long.toString(executionTimeFGL) + " " + 
             Long.toString(executionTimeOP) + " "  + 
             Long.toString(executionTimeLFL) + "\n"  );
+
+            if(listLFL.size() < 10){
+                listLFL.printList();
+            }
         }
         fileTime.close(); 
     }
