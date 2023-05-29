@@ -1,51 +1,51 @@
-import listthreads.*;
+import listthreads.*; 
 import concurrentlist.*;
-import java.io.File;
 import java.io.FileWriter;
 import java.util.concurrent.CountDownLatch;
+import java.io.File;
 
+public class Escenario6 {
+    /* Para cada estructura concurrente creamos 1 threads que agrega 1000 elementos 
+    y otro que lo elimina. El thread que los elimina duerme un segundo en algun momento de la ejecución*/
 
-public class Escenario5 {
-    /* Para cada estructura concurrente creamos threads, donde se agregan y eliminan 1000 elementos 
-    variamos la cantidad de threads dedicados a cada operación */
-
-    
     public static void main(String[] args) throws Exception {
-        
-        File file = new File("src/logs/timeEscenario4.txt");
+
+        File file = new File("src/logs/timeEscenario9.txt");
         file.createNewFile(); 
-          
+
         int reps = 1000;
-        int numberOfThreadsAdd = 1;     //(Posibles combinaciones (1,1), (1,4) (4,1) cambiar variables para ver otros resultados)
-        int numberOfThreadsRemove = 4; 
+        int sleepBeforeAddingElement = 0; //(Cambiar a 500)
+        int numberOfThreadsAdd = 1;   
+        int numberOfThreadsRemove = 1; 
         int numberOfThreads = numberOfThreadsAdd + numberOfThreadsRemove;
-        FileWriter fileTime = new FileWriter("src/logs/timeEscenario4.txt");
+
+        FileWriter fileTime = new FileWriter("src/logs/timeEscenario9.txt");
 
         for(int i = 0; i < reps; i++){
 
             //Lista con granularidad fina
             FineGrainList   listFGL = new FineGrainList(); 
             CountDownLatch latchFGL = new CountDownLatch(numberOfThreads);
-            Thread[] threadsFGL     = ThreadsUtils.createThreadsAddAndThreadsRemove(listFGL, numberOfThreadsAdd, numberOfThreadsRemove, 1000, latchFGL);
+            Thread[] threadsFGL     = ThreadsUtils.createThreadsAddAndThreadsRemoveThatSleeps(listFGL, numberOfThreadsAdd, numberOfThreadsRemove, 1000, sleepBeforeAddingElement, latchFGL);
             long executionTimeFGL   = ThreadsUtils.measureThreadExcecutionTime(threadsFGL, listFGL,  "Lista granularidad fina", latchFGL);
-            
+
             //Lista optimista
-            OptimisticList  listOP  = new OptimisticList();
+            OptimisticList  listOP  = new OptimisticList(); 
             CountDownLatch latchOP  = new CountDownLatch(numberOfThreads);  
-            Thread[] threadsOP      = ThreadsUtils.createThreadsAddAndThreadsRemove(listOP, numberOfThreadsAdd, numberOfThreadsRemove, 1000, latchOP);
+            Thread[] threadsOP      = ThreadsUtils.createThreadsAddAndThreadsRemoveThatSleeps(listOP, numberOfThreadsAdd, numberOfThreadsRemove, 1000, sleepBeforeAddingElement, latchOP);
             long executionTimeOP    = ThreadsUtils.measureThreadExcecutionTime(threadsOP, listOP, "Lista optimista", latchOP);
-            
+
             //Lista sin locks
             LockFreeList    listLFL = new LockFreeList();
             CountDownLatch latchLFL = new CountDownLatch(numberOfThreads);
-            Thread[] threadsLFL     = ThreadsUtils.createThreadsAddAndThreadsRemove(listOP, numberOfThreadsAdd, numberOfThreadsRemove, 1000, latchLFL);
+            Thread[] threadsLFL     = ThreadsUtils.createThreadsAddAndThreadsRemoveThatSleeps(listOP, numberOfThreadsAdd, numberOfThreadsRemove, 1000, sleepBeforeAddingElement, latchLFL);
             long executionTimeLFL   = ThreadsUtils.measureThreadExcecutionTime(threadsLFL, listLFL, "Lista sin locks", latchLFL);
-            
+
             fileTime.write(Long.toString(executionTimeFGL) + " " + 
-                            Long.toString(executionTimeOP) + " "  + 
-                            Long.toString(executionTimeLFL) + "\n"  );
+            Long.toString(executionTimeOP) + " "  + 
+            Long.toString(executionTimeLFL) + "\n"  );
         }
-        
+
         fileTime.close(); 
     }
 }

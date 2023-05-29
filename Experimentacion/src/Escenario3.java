@@ -1,6 +1,7 @@
 import listthreads.*; 
 import concurrentlist.*;
 import java.io.FileWriter;
+import java.util.concurrent.CountDownLatch;
 import java.io.File;
 
 public class Escenario3 {
@@ -13,29 +14,29 @@ public class Escenario3 {
         file.createNewFile(); 
           
         int reps = 1000;
+        int numberOfThreads     = 4;     // (Cambiar a 2 o 8)
+        int numberOfElements    = 1000;
+
         FileWriter fileTime = new FileWriter("src/logs/timeEscenario3.txt");
 
         for(int i = 0; i < reps; i++){
             //Lista con granularidad fina
-            FineGrainList   listFGL     = new FineGrainList(); 
-            Thread[] threadsFGL = ThreadsUtils.createThreadsAdd(listFGL, 2, 1000);
-            //Thread[] threadsFGL = ThreadsUtils.createThreadsAdd(listFGL, 4, 1000);
-            //Thread[] threadsFGL = ThreadsUtils.createThreadsAdd(listFGL, 8, 1000);
-            long executionTimeFGL = ThreadsUtils.measureThreadExcecutionTime(threadsFGL, listFGL,  "Lista granularidad fina");
+            FineGrainList   listFGL = new FineGrainList(); 
+            CountDownLatch latchFGL = new CountDownLatch(numberOfThreads);
+            Thread[] threadsFGL     = ThreadsUtils.createThreadsAdd(listFGL, numberOfThreads, numberOfElements, latchFGL);
+            long executionTimeFGL   = ThreadsUtils.measureThreadExcecutionTime(threadsFGL, listFGL,  "Lista granularidad fina", latchFGL);
             
             //Lista optimista
-            OptimisticList  listOP      = new OptimisticList(); 
-            Thread[] threadsOP = ThreadsUtils.createThreadsAdd(listOP, 2, 1000);
-            //Thread[] threadsOP = ThreadsUtils.createThreadsAdd(listOP, 4, 1000);
-            //Thread[] threadsOP = ThreadsUtils.createThreadsAdd(listOP, 8, 1000);
-            long executionTimeOP = ThreadsUtils.measureThreadExcecutionTime(threadsOP, listOP, "Lista optimista");
+            OptimisticList  listOP  = new OptimisticList();
+            CountDownLatch latchOP  = new CountDownLatch(numberOfThreads); 
+            Thread[] threadsOP      = ThreadsUtils.createThreadsAdd(listOP, numberOfThreads, numberOfElements, latchOP);
+            long executionTimeOP    = ThreadsUtils.measureThreadExcecutionTime(threadsOP, listOP, "Lista optimista", latchOP);
             
             //Lista sin locks
-            LockFreeList    listLFL     = new LockFreeList();
-            Thread[] threadsLFL = ThreadsUtils.createThreadsAdd(listLFL, 2, 1000);
-            //Thread[] threadsLFL = ThreadsUtils.createThreadsAdd(listLFL, 4, 1000);
-            //Thread[] threadsLFL = ThreadsUtils.createThreadsAdd(listLFL, 8, 1000);
-            long executionTimeLFL = ThreadsUtils.measureThreadExcecutionTime(threadsLFL, listLFL, "Lista sin locks");
+            LockFreeList    listLFL = new LockFreeList();
+            CountDownLatch latchLFL = new CountDownLatch(numberOfThreads);
+            Thread[] threadsLFL     = ThreadsUtils.createThreadsAdd(listLFL, numberOfThreads, numberOfElements, latchLFL);
+            long executionTimeLFL   = ThreadsUtils.measureThreadExcecutionTime(threadsLFL, listLFL, "Lista sin locks", latchLFL);
 
             fileTime.write(Long.toString(executionTimeFGL) + " " + 
                             Long.toString(executionTimeOP) + " "  + 

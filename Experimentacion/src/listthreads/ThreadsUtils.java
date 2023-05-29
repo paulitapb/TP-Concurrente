@@ -13,11 +13,11 @@ public class ThreadsUtils{
         return threads; 
     }
 
-    public static Thread[] createThreadsRemove(ConcurrentList list, int numberOfThreads, int to){
+    public static Thread[] createThreadsRemove(ConcurrentList list, int numberOfThreads, int to, CountDownLatch latch){
         Thread[] threads = new ThreadRemove[numberOfThreads]; 
         
         for(int t = 0; t < numberOfThreads; t++){
-            threads[t] = new ThreadRemove(list, t, to, numberOfThreads);
+            threads[t] = new ThreadRemove(list, t, to, numberOfThreads, latch);
         }
         return threads; 
     }
@@ -32,7 +32,7 @@ public class ThreadsUtils{
         }
 
         for(int t = 0; t < numberOfThreadsRemove; t++){
-            threads[t + numberOfThreadsAdd] = new ThreadRemove(list, t, to, numberOfThreadsRemove);
+            threads[t + numberOfThreadsAdd] = new ThreadRemove(list, t, to, numberOfThreadsRemove, latch);
         }
         return threads; 
     }
@@ -47,7 +47,7 @@ public class ThreadsUtils{
         }
 
         for(int t = 0; t < numberOfThreadsRemoveThatSleeps; t++){
-            threads[t + numberOfThreadsAdd] = new ThreadRemoveThatSleeps(list, t, to, numberOfThreadsRemoveThatSleeps, sleepBeforeAddingElement);
+            threads[t + numberOfThreadsAdd] = new ThreadRemoveThatSleeps(list, t, to, numberOfThreadsRemoveThatSleeps, sleepBeforeAddingElement, latch);
         }
         return threads; 
     }

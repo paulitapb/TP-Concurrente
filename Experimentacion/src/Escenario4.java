@@ -1,43 +1,51 @@
 import listthreads.*; 
-public class rsctlast.* 
+import concurrentlist.*;
 import java.io.File;
 import java.io.FileWriter;
-{
+import java.util.concurrent.CountDownLatch;
+
+public class Escenario4{
     /* DEBERIA SER ESCENARIO 4
     Misma cantidad de operaciones y mismca cantidad de threads. Varian los elementos asignados para ser agregados por cada thread.
     */
-
-    
     public static void main(String[] args) throws Exception {
         
         File file = new File("src/logs/timeEscenario8.txt");
         file.createNewFile(); 
           
         int reps = 1000;
+        int numberOfThreads = 4;
+
         FileWriter fileTime = new FileWriter("src/logs/timeEscenario8.txt");
 
         for(int i = 0; i < reps; i++){
             //Lista con granularidad fina
-            FineGrainList   listFGL     = new FineGrainList(); 
-            Thread[] threadsFGL = ThreadsUtils.createLessConcurrentThreadsAdd(listFGL, 4, 1000);
-            //Thread[] threadsFGL = ThreadsUtils.createThreadsAdd(listFGL, 4, 1000);
-            long executionTimeFGL = ThreadsUtils.measureThreadE
-            Thread[] threadsFGL = ThreadsUtils.createLessConcurrentThreadsAdd(listFGL, 4, 1000);xcecutionTime(threadsFGL, listFGL,  "Lista granularidad fina");
-            //Thread[] threadsFGL = ThreadsUtils.createThreadsAdd(listFGL, 4, 1000);
-            Thread[] threadsOP = ThreadsUtils.createLessConcurrentThreadsAdd(listOP, 4, 1000);
-            //Thread[] threadsOP = ThreadsUtils.createThreadsAdd(listOP, 4, 1000);
-            long executionTimeOP = ThreadsUtils.measureThreadExcecutionTime(threadsOP, listOP, "Lista optimista");
+            FineGrainList   listFGL = new FineGrainList(); 
+            CountDownLatch latchFGL = new CountDownLatch(numberOfThreads);
+            Thread[] threadsFGL     = ThreadsUtils.createLessConcurrentThreadsAdd(listFGL, numberOfThreads, 1000, latchFGL);
+            //Thread[] threadsFGL   = ThreadsUtils.createThreadsAdd(listFGL, numberOfThreads, 1000, latchFGL);
+            long executionTimeFGL   = ThreadsUtils.measureThreadExcecutionTime(threadsFGL, listFGL,  "Lista granularidad fina", latchFGL);
             
-            Thread[] threadsOP = ThreadsUtils.createLessConcurrentThreadsAdd(listOP, 4, 1000);
-            //Thread[] threadsOP = ThreadsUtils.createThreadsAdd(listOP, 4, 1000);
-            //Thread[] threadsLFL = ThreadsUtils.createThreadsAdd(listLFL, 4, 1000);
-            long executionTimeLFL = ThreadsUtils.measureThreadExcecutionTime(threadsLFL, listLFL, "Lista sin locks");
+
+            //Lista optimista
+            OptimisticList  listOP  = new OptimisticList();
+            CountDownLatch latchOP  = new CountDownLatch(numberOfThreads); 
+            Thread[] threadsOP      = ThreadsUtils.createLessConcurrentThreadsAdd(listOP, numberOfThreads, 1000, latchOP);
+            //Thread[] threadsOP    = ThreadsUtils.createThreadsAdd(listOP, numberOfThreads, 1000, latchOP);
+            long executionTimeOP    = ThreadsUtils.measureThreadExcecutionTime(threadsOP, listOP, "Lista optimista", latchOP);
+            
+            //Lista sin locks
+            LockFreeList    listLFL = new LockFreeList();
+            CountDownLatch latchLFL = new CountDownLatch(numberOfThreads);
+            Thread[] threadsLFL     = ThreadsUtils.createLessConcurrentThreadsAdd(listLFL, numberOfThreads, 1000, latchLFL);
+            //Thread[] threadsLFL   = ThreadsUtils.createThreadsAdd(listLFL, numberOfThreads, 1000, latchLFL);
+            long executionTimeLFL   = ThreadsUtils.measureThreadExcecutionTime(threadsLFL, listLFL, "Lista sin locks", latchLFL);
             
             fileTime.write(Long.toString(executionTimeFGL) + " " + 
-            Thread[] threadsLFL = ThreadsUtils.createLessConcurrentThreadsAdd(listLFL, 4, 1000);
-            //Thread[] threadsLFL = ThreadsUtils.createThreadsAdd(listLFL, 4, 1000);
-
-
+                            Long.toString(executionTimeOP) + " "  + 
+                            Long.toString(executionTimeLFL) + "\n"  );
+        }
+        
         fileTime.close(); 
     }
 }

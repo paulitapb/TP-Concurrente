@@ -1,5 +1,6 @@
 package listthreads;
 
+import java.util.concurrent.CountDownLatch;
 import concurrentlist.*;
 
 public class ThreadRemoveThatSleeps extends Thread {
@@ -9,13 +10,15 @@ public class ThreadRemoveThatSleeps extends Thread {
     public int to;
     public int step;
     public int sleepBeforeAddingElement;
+    public CountDownLatch latch;
 
-    public ThreadRemoveThatSleeps (ConcurrentList list, int from, int to, int step, int sleepBeforeAddingElement) {
+    public ThreadRemoveThatSleeps (ConcurrentList list, int from, int to, int step, int sleepBeforeAddingElement, CountDownLatch latch) {
         this.list = list;
         this.from = from;
         this.to = to;
         this.step = step;
         this.sleepBeforeAddingElement = sleepBeforeAddingElement;
+        this.latch = latch;
     }
 
     public void run(){

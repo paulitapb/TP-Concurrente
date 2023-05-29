@@ -123,40 +123,32 @@ final public class LockFreeList extends ConcurrentList {
     }
     
     @Override public void printList(){
+        boolean[] marked = {false};
         Node current = this.head.next_mark.getReference();
-        for(int i = 0; i< this.size(); i++){
-            if(this.contains(current.element)){
+        while((Integer)current.element != Integer.MAX_VALUE){
+            current.next_mark.get(marked); 
+            if(!marked[0]){
                 System.out.println(current.element);
+            }else{
+                System.out.println("marcado"+ current.element);
             }
-            current = current.next_mark.getReference();   
+            current = current.next_mark.getReference();
         }
     }
 
     
     @Override public boolean checkListInvariant(){
         int actual_size = 0; 
-        Node current = this.head.next_mark.getReference();
-        for(int i = 0; i< this.size(); i++){
-            if(this.contains(current.element)){
+        Node current = head.next_mark.getReference();
+        boolean[] marked = {false};
+        while((Integer)current.element != Integer.MAX_VALUE){
+            current.next_mark.get(marked); 
+            if(!marked[0]){
                 actual_size++;
             }
             current = current.next_mark.getReference();
-            /* if(node_val + 1 != (int)current.element){
-                System.out.println("falta el" + node_val);
-                System.out.println(current.element);
-                break;
-            }
-            node_val++;  */
-
         }
-        if((actual_size != this.size())){
-            System.out.println("actual " + actual_size);
-            System.out.println("size " + this.size());
-            this.printList();
-            return false; 
-        }
-        //(actual_size == this.size())
-        return  ((Integer)current.element == Integer.MAX_VALUE)
+        return  (actual_size == this.size()) && ((Integer)current.element == Integer.MAX_VALUE)
                 && ((Integer)head.element == Integer.MIN_VALUE); 
     }
 }
