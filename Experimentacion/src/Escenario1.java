@@ -2,40 +2,56 @@ import listthreads.*;
 import concurrentlist.*;
 import java.io.FileWriter;
 import java.io.File; 
-
+import java.util.concurrent.*; 
 
 public class Escenario1 {
-    /* Para cada estructura concurrente creamos 4 threads que agregan 
+    /* Para cada estructura concurrente creamos n threads que agregan 
     concurrentemente 250 elementos cada uno intercaladamente */
 
     public static void main(String[] args) throws Exception {
         
-        File file = new File("src/logs/timeEscenario1.txt");
-        file.createNewFile(); 
+        /* File file = new File("src/logs/timeEscenario1.txt");
+        file.createNewFile();  */
           
-        int reps = 1000;
-        FileWriter fileTime = new FileWriter("src/logs/timeEscenario1.txt");
+        int reps = 10;
+        /* FileWriter fileTime = new FileWriter("src/logs/timeEscenario1.txt"); */
 
         for(int i = 0; i < reps; i++){
 
-            //Lista con granularidad fina
+        /*     //Lista con granularidad fina
             FineGrainList   listFGL     = new FineGrainList(); 
-            Thread[] threadsFGL = ThreadsUtils.createThreadsAdd(listFGL, 4, 1000);
+            Thread[] threadsFGL = ThreadsUtils.createThreadsAdd(listFGL, 2, 500);
+            //Thread[] threadsFGL = ThreadsUtils.createThreadsAdd(listFGL, 4, 1000);
+            //Thread[] threadsFGL = ThreadsUtils.createThreadsAdd(listFGL, 8, 2000);
+
             long executionTimeFGL = ThreadsUtils.measureThreadExcecutionTime(threadsFGL, listFGL,  "Lista granularidad fina");
             
             //Lista optimista
             OptimisticList  listOP      = new OptimisticList(); 
-            Thread[] threadsOP = ThreadsUtils.createThreadsAdd(listOP, 4, 1000);
+            Thread[] threadsOP = ThreadsUtils.createThreadsAdd(listOP, 2, 500);
+            //Thread[] threadsOP = ThreadsUtils.createThreadsAdd(listOP, 4, 1000);
+            //Thread[] threadsOP = ThreadsUtils.createThreadsAdd(listOP, 8, 2000);
             long executionTimeOP = ThreadsUtils.measureThreadExcecutionTime(threadsOP, listOP, "Lista optimista");
-            
+         */    
             //Lista sin locks
             LockFreeList    listLFL     = new LockFreeList();
-            Thread[] threadsLFL = ThreadsUtils.createThreadsAdd(listLFL, 4, 10);
-            long executionTimeLFL = ThreadsUtils.measureThreadExcecutionTime(threadsLFL, listLFL, "Lista sin locks");
+            //Thread[] threadsLFL = ThreadsUtils.createThreadsAdd(listLFL, 2, 500);
+            //Thread[] threadsLFL = ThreadsUtils.createThreadsAdd(listLFL, 4, 1000);
+            //Thread[] threadsLFL = ThreadsUtils.createThreadsAdd(listLFL, 8, 2000);
 
-            Thread.sleep(100);
-            listLFL.printList();
-            if(!listFGL.checkListInvariant() || !listOP.checkListInvariant() || !listLFL.checkListInvariant()){
+            // TOD: hacer un numbers of threads 
+            CountDownLatch latchLFL = new CountDownLatch(4);
+            Thread[] threadsLFL = ThreadsUtils.createThreadsAdd(listLFL, 4, 10, latchLFL); //despues borrar esta linea
+            long executionTimeLFL = ThreadsUtils.measureThreadExcecutionTime(threadsLFL, listLFL, "Lista sin locks", latchLFL);
+ 
+            
+            if(!listLFL.checkListInvariant()){
+                System.out.println("falllo inv");
+                //listLFL.printList();
+            }
+            
+            //listLFL.printList();
+            /* if(!listFGL.checkListInvariant() || !listOP.checkListInvariant() || !listLFL.checkListInvariant()){
             
                 System.out.println("Se rompio alguna lista");
                 break;
@@ -43,9 +59,9 @@ public class Escenario1 {
 
             fileTime.write(Long.toString(executionTimeFGL) + " " + 
                             Long.toString(executionTimeOP) + " "  + 
-                            Long.toString(executionTimeLFL) + "\n"  );
+                            Long.toString(executionTimeLFL) + "\n"  ); */
         }
         
-        fileTime.close(); 
+        //fileTime.close(); 
     }
 }

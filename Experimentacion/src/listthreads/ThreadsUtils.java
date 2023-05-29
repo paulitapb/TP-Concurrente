@@ -1,13 +1,14 @@
 package listthreads;
 import concurrentlist.*;
+import java.util.concurrent.CountDownLatch;
 
 public class ThreadsUtils{
     
-    public static Thread[] createThreadsAdd(ConcurrentList list, int numberOfThreads, int to){
+    public static Thread[] createThreadsAdd(ConcurrentList list, int numberOfThreads, int to, CountDownLatch latch){
         Thread[] threads = new ThreadAdd[numberOfThreads]; 
         
         for(int t = 0; t < numberOfThreads; t++){
-            threads[t] = new ThreadAdd(list, t, to, numberOfThreads);
+            threads[t] = new ThreadAdd(list, t, to, numberOfThreads, latch);
         }
         return threads; 
     }
@@ -21,12 +22,13 @@ public class ThreadsUtils{
         return threads; 
     }
 
-    public static Thread[] createThreadsAddAndThreadsRemove(ConcurrentList list, int numberOfThreadsAdd, int numberOfThreadsRemove, int to){
+    public static Thread[] createThreadsAddAndThreadsRemove(ConcurrentList list, int numberOfThreadsAdd, int numberOfThreadsRemove, 
+                                                        int to, CountDownLatch latch){
         int numberOfThreads = numberOfThreadsAdd + numberOfThreadsRemove;
         Thread[] threads = new Thread[numberOfThreads]; 
         
         for(int t = 0; t < numberOfThreadsAdd; t++){
-            threads[t] = new ThreadAdd(list, t, to, numberOfThreadsAdd);
+            threads[t] = new ThreadAdd(list, t, to, numberOfThreadsAdd, latch);
         }
 
         for(int t = 0; t < numberOfThreadsRemove; t++){
@@ -35,12 +37,13 @@ public class ThreadsUtils{
         return threads; 
     }
 
-    public static Thread[] createThreadsAddAndThreadsRemoveThatSleeps(ConcurrentList list, int numberOfThreadsAdd, int numberOfThreadsRemoveThatSleeps, int to, int sleepBeforeAddingElement){
+    public static Thread[] createThreadsAddAndThreadsRemoveThatSleeps(ConcurrentList list, int numberOfThreadsAdd, int numberOfThreadsRemoveThatSleeps, int to, 
+                                                                int sleepBeforeAddingElement, CountDownLatch latch){
         int numberOfThreads = numberOfThreadsAdd + numberOfThreadsRemoveThatSleeps;
         Thread[] threads = new Thread[numberOfThreads]; 
         
         for(int t = 0; t < numberOfThreadsAdd; t++){
-            threads[t] = new ThreadAdd(list, t, to, numberOfThreadsAdd);
+            threads[t] = new ThreadAdd(list, t, to, numberOfThreadsAdd, latch);
         }
 
         for(int t = 0; t < numberOfThreadsRemoveThatSleeps; t++){
@@ -49,13 +52,13 @@ public class ThreadsUtils{
         return threads; 
     }
 
-    public static Thread[] createLessConcurrentThreadsAdd(ConcurrentList list, int numberOfThreads, int to){
+    public static Thread[] createLessConcurrentThreadsAdd(ConcurrentList list, int numberOfThreads, int to, CountDownLatch latch){
         Thread[] threads = new ThreadAdd[numberOfThreads]; 
         
         for(int t = 0; t < numberOfThreads; t++){
             int from_t = (to/numberOfThreads) * t;
             int to_t = (to/numberOfThreads) * (t+1);
-            threads[t] = new ThreadAdd(list, from_t, to_t, 1);
+            threads[t] = new ThreadAdd(list, from_t, to_t, 1, latch);
         }
         return threads; 
     }
@@ -77,19 +80,21 @@ public class ThreadsUtils{
         }
     }
 
-    public static long measureThreadExcecutionTime(Thread[] threads, ConcurrentList list, String listName){
-
+    public static long measureThreadExcecutionTime(Thread[] threads, ConcurrentList list, String listName, 
+                                                    CountDownLatch latch ){
+       
         long start = System.currentTimeMillis();
 
         startThreads(threads);
-        joinThreads(threads);
         
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         long finish = System.currentTimeMillis();
-        long timeElapsed = finish -start;
+        long timeElapsed = finish - start;
         
-        //System.out.println("The final list size is " + list.size());
-        //System.out.println("");
-        //list.printList();
         return timeElapsed; 
     }
 }

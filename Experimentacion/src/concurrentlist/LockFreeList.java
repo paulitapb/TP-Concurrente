@@ -132,28 +132,28 @@ final public class LockFreeList extends ConcurrentList {
         }
     }
 
-    // VER EL ORDEN DEL HASH CODE
+    
     @Override public boolean checkListInvariant(){
         int actual_size = 0; 
         Node current = this.head.next_mark.getReference();
-        System.out.println(current.element);
-        int node_val = 0; 
         for(int i = 0; i< this.size(); i++){
-            /* if(this.contains(current.element)){
+            if(this.contains(current.element)){
                 actual_size++;
-            } */
+            }
             current = current.next_mark.getReference();
-            if(node_val + 1 != (int)current.element){
+            /* if(node_val + 1 != (int)current.element){
                 System.out.println("falta el" + node_val);
                 System.out.println(current.element);
                 break;
             }
-            node_val++; 
+            node_val++;  */
 
         }
         if((actual_size != this.size())){
-            System.out.println("actual" + actual_size);
-            System.out.println("size" + this.size());
+            System.out.println("actual " + actual_size);
+            System.out.println("size " + this.size());
+            this.printList();
+            return false; 
         }
         //(actual_size == this.size())
         return  ((Integer)current.element == Integer.MAX_VALUE)

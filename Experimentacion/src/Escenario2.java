@@ -28,15 +28,21 @@ public class Escenario2 {
             }
 
             //Lista con granularidad fina
-            Thread[] threadsFGL = ThreadsUtils.createThreadsRemove(listFGL, 4, 1000);
+            Thread[] threadsFGL = ThreadsUtils.createThreadsRemove(listFGL, 2, 500);
+            //Thread[] threadsFGL = ThreadsUtils.createThreadsRemove(listFGL, 4, 1000);
+            //Thread[] threadsFGL = ThreadsUtils.createThreadsRemove(listFGL, 8, 2000);
             long executionTimeFGL = ThreadsUtils.measureThreadExcecutionTime(threadsFGL, listFGL,  "Lista granularidad fina");
         
             //Lista optimista
-            Thread[] threadsOP = ThreadsUtils.createThreadsRemove(listOP, 4, 1000);
+            Thread[] threadsOP = ThreadsUtils.createThreadsRemove(listOP, 2, 500);
+            //Thread[] threadsOP = ThreadsUtils.createThreadsRemove(listOP, 4, 1000);
+            //Thread[] threadsOP = ThreadsUtils.createThreadsRemove(listOP, 8, 2000);
             long executionTimeOP = ThreadsUtils.measureThreadExcecutionTime(threadsOP, listOP, "Lista optimista");
 
             //Lista sin locks
-            Thread[] threadsLFL = ThreadsUtils.createThreadsRemove(listLFL, 4, 1000);
+            Thread[] threadsLFL = ThreadsUtils.createThreadsRemove(listLFL, 2, 500);
+            //Thread[] threadsLFL = ThreadsUtils.createThreadsRemove(listLFL, 4, 1000);
+            //Thread[] threadsLFL = ThreadsUtils.createThreadsRemove(listLFL, 8, 2000);
             long executionTimeLFL = ThreadsUtils.measureThreadExcecutionTime(threadsLFL, listLFL, "Lista sin locks");
 
             fileTime.write(Long.toString(executionTimeFGL) + " " + 
