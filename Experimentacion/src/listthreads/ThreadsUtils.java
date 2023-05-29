@@ -80,7 +80,7 @@ public class ThreadsUtils{
         }
     }
 
-    public static long measureThreadExcecutionTime(Thread[] threads, ConcurrentList list, String listName, 
+    public static long measureThreadExcecutionTime(Thread[] threads, ConcurrentList list,
                                                     CountDownLatch latch ){
        
         long start = System.currentTimeMillis();

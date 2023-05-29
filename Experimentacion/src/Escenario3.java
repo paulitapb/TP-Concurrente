@@ -24,25 +24,28 @@ public class Escenario3 {
             FineGrainList   listFGL = new FineGrainList(); 
             CountDownLatch latchFGL = new CountDownLatch(numberOfThreads);
             Thread[] threadsFGL     = ThreadsUtils.createThreadsAdd(listFGL, numberOfThreads, numberOfElements, latchFGL);
-            long executionTimeFGL   = ThreadsUtils.measureThreadExcecutionTime(threadsFGL, listFGL,  "Lista granularidad fina", latchFGL);
+            long executionTimeFGL   = ThreadsUtils.measureThreadExcecutionTime(threadsFGL, listFGL, latchFGL);
             
             //Lista optimista
             OptimisticList  listOP  = new OptimisticList();
             CountDownLatch latchOP  = new CountDownLatch(numberOfThreads); 
             Thread[] threadsOP      = ThreadsUtils.createThreadsAdd(listOP, numberOfThreads, numberOfElements, latchOP);
-            long executionTimeOP    = ThreadsUtils.measureThreadExcecutionTime(threadsOP, listOP, "Lista optimista", latchOP);
+            long executionTimeOP    = ThreadsUtils.measureThreadExcecutionTime(threadsOP, listOP, latchOP);
             
             //Lista sin locks
             LockFreeList    listLFL = new LockFreeList();
             CountDownLatch latchLFL = new CountDownLatch(numberOfThreads);
             Thread[] threadsLFL     = ThreadsUtils.createThreadsAdd(listLFL, numberOfThreads, numberOfElements, latchLFL);
-            long executionTimeLFL   = ThreadsUtils.measureThreadExcecutionTime(threadsLFL, listLFL, "Lista sin locks", latchLFL);
+            long executionTimeLFL   = ThreadsUtils.measureThreadExcecutionTime(threadsLFL, listLFL, latchLFL);
+
+            if(!listFGL.checkListInvariant() || !listOP.checkListInvariant() || !listLFL.checkListInvariant()){
+                System.out.println("Fallo el invariante para alguna lista");
+            }
 
             fileTime.write(Long.toString(executionTimeFGL) + " " + 
                             Long.toString(executionTimeOP) + " "  + 
                             Long.toString(executionTimeLFL) + "\n"  );
         }
-
         fileTime.close(); 
     }
 }

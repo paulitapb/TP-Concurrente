@@ -10,8 +10,8 @@ public class Escenario1 {
 
     public static void main(String[] args) throws Exception {
         
-        /* File file = new File("src/logs/timeEscenario1.txt");
-        file.createNewFile();  */
+        File file = new File("src/logs/timeEscenario1.txt");
+        file.createNewFile();
           
         int reps = 10;
         int numberOfThreads     = 4;     // (Cambiar a 2 o 8)
@@ -25,23 +25,22 @@ public class Escenario1 {
             FineGrainList   listFGL = new FineGrainList(); 
             CountDownLatch latchFGL = new CountDownLatch(numberOfThreads);
             Thread[] threadsFGL     = ThreadsUtils.createThreadsAdd(listFGL, numberOfThreads, numberOfElements, latchFGL);
-            long executionTimeFGL   = ThreadsUtils.measureThreadExcecutionTime(threadsFGL, listFGL,  "Lista granularidad fina", latchFGL);
+            long executionTimeFGL   = ThreadsUtils.measureThreadExcecutionTime(threadsFGL, listFGL, latchFGL);
             
             //Lista optimista
             OptimisticList  listOP  = new OptimisticList(); 
             CountDownLatch latchOP  = new CountDownLatch(numberOfThreads);  
             Thread[] threadsOP      = ThreadsUtils.createThreadsAdd(listOP, numberOfThreads, numberOfElements, latchOP);
-            long executionTimeOP    = ThreadsUtils.measureThreadExcecutionTime(threadsOP, listOP, "Lista optimista", latchOP);
+            long executionTimeOP    = ThreadsUtils.measureThreadExcecutionTime(threadsOP, listOP, latchOP);
              
             //Lista sin locks
             LockFreeList    listLFL = new LockFreeList();
             CountDownLatch latchLFL = new CountDownLatch(numberOfThreads);
             Thread[] threadsLFL     = ThreadsUtils.createThreadsAdd(listLFL, numberOfThreads, numberOfElements, latchLFL);
-            long executionTimeLFL   = ThreadsUtils.measureThreadExcecutionTime(threadsLFL, listLFL, "Lista sin locks", latchLFL);
- 
+            long executionTimeLFL   = ThreadsUtils.measureThreadExcecutionTime(threadsLFL, listLFL, latchLFL);
             
-            if(!listLFL.checkListInvariant()){
-                System.out.println("Fallo el invariante");
+            if(!listFGL.checkListInvariant() || !listOP.checkListInvariant() || !listLFL.checkListInvariant()){
+                System.out.println("Fallo el invariante para alguna lista");
             }
             
             fileTime.write(Long.toString(executionTimeFGL) + " " + 

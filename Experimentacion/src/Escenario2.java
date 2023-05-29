@@ -33,17 +33,21 @@ public class Escenario2 {
             //Lista con granularidad fina
             CountDownLatch latchFGL = new CountDownLatch(numberOfThreads);
             Thread[] threadsFGL     = ThreadsUtils.createThreadsRemove(listFGL, numberOfThreads, numberOfElements, latchFGL);
-            long executionTimeFGL   = ThreadsUtils.measureThreadExcecutionTime(threadsFGL, listFGL,  "Lista granularidad fina", latchFGL);
+            long executionTimeFGL   = ThreadsUtils.measureThreadExcecutionTime(threadsFGL, listFGL, latchFGL);
         
             //Lista optimista
             CountDownLatch latchOP  = new CountDownLatch(numberOfThreads);
             Thread[] threadsOP      = ThreadsUtils.createThreadsRemove(listOP, numberOfThreads, numberOfElements, latchOP);
-            long executionTimeOP    = ThreadsUtils.measureThreadExcecutionTime(threadsOP, listOP, "Lista optimista", latchOP);
+            long executionTimeOP    = ThreadsUtils.measureThreadExcecutionTime(threadsOP, listOP, latchOP);
 
             //Lista sin locks
             CountDownLatch latchLFL = new CountDownLatch(numberOfThreads);
             Thread[] threadsLFL     = ThreadsUtils.createThreadsRemove(listLFL, numberOfThreads, numberOfElements, latchLFL);
-            long executionTimeLFL   = ThreadsUtils.measureThreadExcecutionTime(threadsLFL, listLFL, "Lista sin locks", latchLFL);
+            long executionTimeLFL   = ThreadsUtils.measureThreadExcecutionTime(threadsLFL, listLFL, latchLFL);
+
+            if(!listFGL.checkListInvariant() || !listOP.checkListInvariant() || !listLFL.checkListInvariant()){
+                System.out.println("Fallo el invariante para alguna lista");
+            }
 
             fileTime.write(Long.toString(executionTimeFGL) + " " + 
                             Long.toString(executionTimeOP) + " "  + 
