@@ -7,7 +7,7 @@ final public class LockFreeList extends ConcurrentList {
     private class Node {
         private Object element;
         private int hashKey; 
-        private AtomicMarkableReference<Node> next_mark;
+        private volatile AtomicMarkableReference<Node> next_mark;
         
         public Node (Object element){
             this.element = element;
@@ -77,10 +77,11 @@ final public class LockFreeList extends ConcurrentList {
                 return false;
             else{
                 Node node = new Node(o);
-                node.next_mark = new AtomicMarkableReference<Node>(current,false);
-                if (predecesor.next_mark.compareAndSet(current, node, false, false))
+                node.next_mark = new AtomicMarkableReference<Node>(predecesor.next_mark.getReference(),false);
+                if (predecesor.next_mark.compareAndSet(current, node, false, false)){
                     size.getAndIncrement();
                     return true;
+                }
             }
         }
     }
@@ -101,9 +102,9 @@ final public class LockFreeList extends ConcurrentList {
                     current = succesor;
                     succesor = current.next_mark.get(marked);
                 }
+                
                 if (current.hashKey() >= key){
-                    NodeTuple predecesorAndSucc = new NodeTuple(predecesor, current);  
-                    return predecesorAndSucc;
+                    return new NodeTuple(predecesor, current); 
                 }
                 predecesor = current;
                 current = succesor;
@@ -138,11 +139,16 @@ final public class LockFreeList extends ConcurrentList {
     @Override public boolean checkListInvariant(){
         int actual_size = 0; 
         Node current = head.next_mark.getReference();
+        int last_hash = current.hashKey();
         while((Integer)current.element != Integer.MAX_VALUE){
             if(!current.next_mark.isMarked()){
                 actual_size++;
             }
             current = current.next_mark.getReference();
+            /* if(current.hashKey() < last_hash){
+                System.out.println("Lista desordenada");
+                this.printList();
+            } */
         }
         return  (actual_size == this.size()) && ((Integer)current.element == Integer.MAX_VALUE)
                 && ((Integer)head.element == Integer.MIN_VALUE); 
