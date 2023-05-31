@@ -133,22 +133,16 @@ final public class LockFreeList extends ConcurrentList {
             }
             current = current.next_mark.getReference();
         }
-        System.out.println(); 
     }
 
     @Override public boolean checkListInvariant(){
         int actual_size = 0; 
         Node current = head.next_mark.getReference();
-        int last_hash = current.hashKey();
         while((Integer)current.element != Integer.MAX_VALUE){
             if(!current.next_mark.isMarked()){
                 actual_size++;
             }
             current = current.next_mark.getReference();
-            /* if(current.hashKey() < last_hash){
-                System.out.println("Lista desordenada");
-                this.printList();
-            } */
         }
         return  (actual_size == this.size()) && ((Integer)current.element == Integer.MAX_VALUE)
                 && ((Integer)head.element == Integer.MIN_VALUE); 

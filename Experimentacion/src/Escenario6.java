@@ -46,16 +46,8 @@ public class Escenario6 {
             ThreadsUtils.measureThreadExcecutionTime(threadsLFL, listLFL, latchLFL);
             int sizeLFL = listLFL.size(); 
 
-            if(!listFGL.checkListInvariant()){
-                System.out.println("Fallo el invariante para alguna lista GRANOS FINOS");
-            }
-
-            if(!listOP.checkListInvariant()){
-                System.out.println("Fallo el invariante para alguna lista SOMOS OPTIMISTAS");
-            }
-
-            if(!listLFL.checkListInvariant()){
-                System.out.println("Fallo el invariante para alguna lista MI CORAZON TINEE EL CANDADO ABIERTO");
+            if(!listFGL.checkListInvariant() || !listOP.checkListInvariant() || !listLFL.checkListInvariant()){
+                System.out.println("Fallo el invariante para alguna lista");
             }
 
             fileTime.write(Long.toString(sizeFGL) + " " + 
