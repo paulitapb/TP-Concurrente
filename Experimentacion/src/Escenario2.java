@@ -24,7 +24,7 @@ public class Escenario2 {
             OptimisticList  listOP  = new OptimisticList(); 
             LockFreeList    listLFL = new LockFreeList();
 
-            for(int i = 0; i<1000; i++){
+            for(int i = 0; i<numberOfElements; i++){
                 listFGL.add(i);
                 listOP.add(i);
                 listLFL.add(i);

@@ -57,7 +57,7 @@ public class ThreadsUtils{
         
         for(int t = 0; t < numberOfThreads; t++){
             int from_t = (to/numberOfThreads) * t;
-            int to_t = (to/numberOfThreads) * (t+1);
+            int to_t = (to/numberOfThreads) * (t+1)-1;
             threads[t] = new ThreadAdd(list, from_t, to_t, 1, latch);
         }
         return threads; 

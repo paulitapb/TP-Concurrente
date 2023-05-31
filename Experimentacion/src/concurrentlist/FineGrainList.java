@@ -93,7 +93,7 @@ final public class FineGrainList extends ConcurrentList{
     @Override public void printList(){
         Node current = this.head.next();
         for(int i = 0; i< this.size(); i++){
-            System.out.println(current.element);
+            System.out.print(current.element + " ");
             current = current.next;
         }
     }

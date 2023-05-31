@@ -11,7 +11,7 @@ public class Escenario1 {
     public static void main(String[] args) throws Exception {
         
         int reps = 1000;
-        int numberOfThreads     = 2;     // (Cambiar a 2 o 8)
+        int numberOfThreads     = 8;     // (Cambiar a 2 o 8)
         int numberOfElements    = 250*numberOfThreads;  // (Cambiar a 500 o 2000 respectivo a la linea anterior)
 
         File file = new File("src/logs/timeEscenario1Threads"+ Integer.toString(numberOfThreads) +".txt");

@@ -128,8 +128,6 @@ final public class LockFreeList extends ConcurrentList {
         while((Integer)current.element != Integer.MAX_VALUE){  
             if(!current.next_mark.isMarked()){
                 System.out.print(current.element + " ");
-            }else{
-                System.out.println("marcado"+ current.element);
             }
             current = current.next_mark.getReference();
         }

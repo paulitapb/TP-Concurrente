@@ -111,7 +111,7 @@ final public class OptimisticList extends ConcurrentList{
     @Override public void printList(){
         Node current = this.head.next();
         for(int i = 0; i< this.size.get(); i++){
-            System.out.println(current.element);
+            System.out.print(current.element + " ");
             current = current.next;
         }
     }
