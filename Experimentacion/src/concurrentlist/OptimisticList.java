@@ -120,8 +120,7 @@ final public class OptimisticList extends ConcurrentList{
         int actual_size = 0; 
         Node current = this.head.next();
         int last_hash = current.hashKey(); 
-            
-        for(int i = 0; i< this.size(); i++){
+        while((Integer)current.element != Integer.MAX_VALUE){
             current = current.next;
             int curr_hash = current.hashKey();
 
@@ -132,6 +131,7 @@ final public class OptimisticList extends ConcurrentList{
             actual_size++; 
         }
 
+        
         return (actual_size == this.size()) && ((Integer)current.element == Integer.MAX_VALUE)
                 && ((Integer)head.element == Integer.MIN_VALUE);  
     }

@@ -5,17 +5,18 @@ import java.io.FileWriter;
 import java.util.concurrent.CountDownLatch;
 
 public class Escenario4{
-    /* Misma cantidad de operaciones y mismca cantidad de threads. Varian los elementos asignados para ser agregados por cada thread.
-    */
+    /* Misma cantidad de operaciones y misma cantidad de threads. Varian los elementos asignados para ser agregados por cada thread.
+       Aclaracion: La linea comentada es repetir el experimento 1 con 4 threads, lo dejamos aca ya que va a ser contra el cual se haga la comparación.
+       */
     public static void main(String[] args) throws Exception {
-        
-        File file = new File("src/logs/timeEscenario4.txt");
-        file.createNewFile(); 
-          
+                  
         int reps = 1000;
         int numberOfThreads = 4;
 
-        FileWriter fileTime = new FileWriter("src/logs/timeEscenario4.txt");
+        File file = new File("src/logs/timeEscenario4AddBlock.txt");
+        file.createNewFile();
+          
+        FileWriter fileTime = new FileWriter("src/logs/timeEscenario4AddBlock.txt");
 
         for(int i = 0; i < reps; i++){
             //Lista con granularidad fina

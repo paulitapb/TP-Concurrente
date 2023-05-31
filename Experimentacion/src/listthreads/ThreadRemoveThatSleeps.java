@@ -32,7 +32,9 @@ public class ThreadRemoveThatSleeps extends Thread {
 				}
             list.remove(value);
             value+=step;
+            
         }
+        latch.countDown(); 
     }
 
 }

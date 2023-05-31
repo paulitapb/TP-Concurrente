@@ -25,7 +25,7 @@ public class ThreadRemove extends Thread {
             list.remove(value);
             value+=step;
         }
+        latch.countDown(); 
     }
-
 }
 

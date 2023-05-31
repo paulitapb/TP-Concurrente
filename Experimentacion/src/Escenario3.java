@@ -10,14 +10,14 @@ public class Escenario3 {
     
     public static void main(String[] args) throws Exception {
         
-        File file = new File("src/logs/timeEscenario3.txt");
-        file.createNewFile(); 
-          
         int reps = 1000;
-        int numberOfThreads     = 4;     // (Cambiar a 2 o 8)
+        int numberOfThreads     = 8;     // (Cambiar a 2 o 8)
         int numberOfElements    = 1000;
-
-        FileWriter fileTime = new FileWriter("src/logs/timeEscenario3.txt");
+        
+        File file = new File("src/logs/timeEscenario3Threads"+ Integer.toString(numberOfThreads) +".txt");
+        file.createNewFile();
+        
+        FileWriter fileTime = new FileWriter("src/logs/timeEscenario3Threads"+ Integer.toString(numberOfThreads) +".txt");
 
         for(int i = 0; i < reps; i++){
             //Lista con granularidad fina
